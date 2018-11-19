@@ -1,27 +1,26 @@
-﻿#include "BulkServer.h"
-#include "BulkClientSession.h"
+﻿#include "JoinServer.h"
+#include "JoinClientSession.h"
 
 namespace bulk {
 
-BulkServer::BulkServer(uint16_t port, size_t bulk_size) :
+JoinServer::JoinServer(uint16_t port) :
   acceptor_(service_, ba::ip::tcp::endpoint(ba::ip::tcp::v4(), port)),
-  sock_(service_),
-  bulk_size_{bulk_size} {
+  sock_(service_) {
 }
 
-BulkServer::~BulkServer() {
+JoinServer::~JoinServer() {
 }
 
-void BulkServer::handle_accept() {
+void JoinServer::handle_accept() {
   acceptor_.async_accept(sock_, [this](const boost::system::error_code& ec) {
     if(!ec) {
-      std::make_shared<BulkClientSession>(bulk_size_, std::move(sock_))->start();
+      std::make_shared<BulkClientSession>(std::move(sock_))->start();
     }
     handle_accept();
   });
 }
 
-void BulkServer::start() {
+void JoinServer::start() {
   ba::signal_set signals(service_, SIGINT, SIGTERM);
   signals.async_wait([this, &signals](const boost::system::error_code&, int) {
     handle_stop();
@@ -30,7 +29,7 @@ void BulkServer::start() {
   service_.run();
 }
 
-void BulkServer::handle_stop() {
+void JoinServer::handle_stop() {
   service_.stop();
 }
 

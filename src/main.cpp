@@ -1,17 +1,17 @@
 #include "ver.h"
-#include "BulkServer.h"
+#include "JoinServer.h"
 
 #include <iostream>
 
 
 int main(int argc, char const *argv[]) {
-  std::cout << "bulk_server version: "
+  std::cout << "join_server version: "
             << ver_major() << "."
             << ver_minor() << "."
             << ver_patch() << std::endl;
 
-  if(argc != 3) {
-    std::cerr << "Wrong number of arguments (expected 2). Usage: bulk_server <port> <bulk_size>. \n" << std::endl;
+  if(argc != 2) {
+    std::cerr << "Wrong number of arguments (expected 1). Usage: join_server <port>. \n" << std::endl;
     return EXIT_FAILURE;
   }
 
@@ -21,16 +21,10 @@ int main(int argc, char const *argv[]) {
     return EXIT_FAILURE;
   }
 
-  auto bulk_size = std::strtoll(argv[2], nullptr, 0);
-  if(bulk_size <= 0) {
-    std::cerr << "Bulk size must be integer greater than 0.\n";
-    return EXIT_FAILURE;
-  }
-
   // Создание и запуск сервера.
   try {
-    bulk::BulkServer bulk_server{static_cast<uint16_t>(port), static_cast<size_t>(bulk_size)};
-    bulk_server.start();
+    bulk::JoinServer join_server{static_cast<uint16_t>(port)};
+    join_server.start();
   } catch(std::exception& e) {
     std::cerr << e.what() << std::endl;
   }

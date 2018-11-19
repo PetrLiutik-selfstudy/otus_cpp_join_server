@@ -7,18 +7,17 @@ namespace ba = boost::asio;
 namespace bulk {
 
 /**
- * @brief Класс сервера обработки блоков команд.
+ * @brief Класс сервера обработки запросов к БД.
  */
-class BulkServer {
+class JoinServer {
 public:
   /**
-   * @brief Конструктор сервера обработки блоков команд.
+   * @brief Конструктор сервера обработки запросов к БД.
    * @param port - номер порта.
-   * @param bulk_size- размер блока команд.
    */
-  explicit BulkServer(uint16_t port, size_t bulk_size);
+  explicit JoinServer(uint16_t port);
 
-  ~BulkServer();
+  ~JoinServer();
 
   /**
    * @brief Запуск сервера.
@@ -39,7 +38,6 @@ private:
   ba::io_service        service_{};
   ba::ip::tcp::acceptor acceptor_;
   ba::ip::tcp::socket   sock_;
-  size_t                bulk_size_;
 };
 
 } // namespace bulk.

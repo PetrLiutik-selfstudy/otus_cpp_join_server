@@ -14,16 +14,15 @@ namespace bulk {
 /**
  * @brief Класс сессии клиента.
  */
-class BulkClientSession : public std::enable_shared_from_this<BulkClientSession> {
+class JoinClientSession : public std::enable_shared_from_this<JoinClientSession> {
 public:
   /**
    * @brief Конструктор клиентской сессии.
-   * @param bulk_size - размер блока команд.
    * @param sock - сокет, через который установлено соединение с клиентом.
    */
-  explicit BulkClientSession(size_t bulk_size, ba::ip::tcp::socket sock);
+  explicit JoinClientSession(ba::ip::tcp::socket sock);
 
-  ~BulkClientSession() = default;
+  ~JoinClientSession() = default;
 
   /**
  * @brief Запустить клиентскую сессию.
@@ -40,11 +39,10 @@ private:
   /// Размер приемного буфера.
   static constexpr size_t buf_len = 1024;
 
-  size_t                             bulk_size_;
   ba::ip::tcp::socket                sock_;
   handle_t                           handle_{};
   std::array<char, buf_len>          buf_;
-  std::shared_ptr<BulkClientSession> self_;
+  std::shared_ptr<JoinClientSession> self_;
 };
 
 } // namespace bulk.
