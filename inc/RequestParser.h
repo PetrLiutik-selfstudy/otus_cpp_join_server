@@ -25,14 +25,14 @@ class RequestParser {
      * @param request - принятый запрос.
      * @return результат обработки запроса.
      */
-    reply_t parse(const std::string& request);
+    Reply parse(const std::string& request);
 
   private:
 
     DataBase db_{};
 
     /// Таблица функций запросов к БД.
-    std::map<std::string, std::function<reply_t()>> req_func_tab_;
+    std::map<std::string, std::function<Reply()>> req_func_tab_;
     /// Параметры запроса.
     req_params_t req_params_;
 };

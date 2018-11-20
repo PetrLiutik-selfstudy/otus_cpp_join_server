@@ -14,7 +14,7 @@ RequestParser::RequestParser() {
   req_func_tab_.emplace(std::make_pair("SYMMETRIC_DIFFERENCE", std::bind(&DataBase::symmetric_difference, std::ref(db_), std::ref(req_params_))));
 }
 
-reply_t RequestParser::parse(const std::string& request) {
+Reply RequestParser::parse(const std::string& request) {
   // Разбиение входной строки.
   std::string req_type; // Тип запроса.
   std::istringstream iss(request);
@@ -30,7 +30,7 @@ reply_t RequestParser::parse(const std::string& request) {
     auto req_func = it->second;
     return req_func();
   }
-  return reply_t{false, "unknown request " + req_type};
+  return Reply{false, "unknown request " + req_type};
 }
 
 } // namespace db.

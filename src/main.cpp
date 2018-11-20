@@ -34,16 +34,16 @@ int main(int argc, char const *argv[]) {
 
   db::RequestParser parser;
 
-  std::cout << parser.parse("CREATE A").second << std::endl;
-  std::cout << parser.parse("CREATE A").second << std::endl;
+  std::cout << parser.parse("CREATE A");
+  std::cout << parser.parse("CREATE B");
 
-  auto reply = parser.parse("INSERT A 1 aaa\n");
-  if(reply.first) {
-    std::cout << "OK ";
-  } else {
-    std::cout << "ERR ";
-  }
-  std::cout << reply.second << std::endl;
+  std::cout << parser.parse("INSERT A 1 aaa");
+  std::cout << parser.parse("INSERT B 1 bbb");
+  std::cout << parser.parse("INSERT A 2 xxx");
+  std::cout << parser.parse("INSERT B 3 yyy");
+
+  std::cout << parser.parse("INTERSECTION A B");
+  std::cout << parser.parse("SYMMETRIC_DIFFERENCE A B");
 
   return 0;
 }

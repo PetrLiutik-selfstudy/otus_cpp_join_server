@@ -8,11 +8,39 @@
 
 namespace db {
 
-/// Тип параметров запроса к БД.
+/// Тип параметров запроса к базе данных.
 using req_params_t = std::vector<std::string>;
 
-/// Тип ответа на обращение к БД.
-using reply_t = std::pair<bool, std::string>;
+/// Класс ответа на запрос к базе данных.
+class Reply {
+public:
+  explicit Reply(bool result, const std::string& value) : result_{result}, value_{value} {
+  }
+  explicit Reply(bool result) : result_{result}, value_{} {
+  }
+  ~Reply() = default;
+  Reply(const Reply& other) = default;
+  Reply(Reply&& other) noexcept = default;
+  Reply& operator =(const Reply& other) = default;
+  Reply& operator =(Reply&& other) = default;
+
+  void add(const std::string& value) {
+    value_ += value;
+  }
+
+  /**
+   * @brief Оператор вывода в поток блока команд.
+   * @param os - поток вывода.
+   * @param bulk - блок команд для вывода в поток.
+   * @return
+   */
+  friend std::ostream& operator <<(std::ostream& os, const Reply& reply);
+
+private:
+  bool result_{};
+  std::string value_{};
+};
+
 
 /**
  * @brief Класс базы данных.
@@ -28,7 +56,7 @@ class DataBase {
      *        req_params[0] - название таблицы.
      * @return - результат создания таблицы.
      */
-    reply_t create(const req_params_t& req_params);
+    Reply create(const req_params_t& req_params);
 
     /**
      * @brief Уничтожить таблицу таблицу.
@@ -36,7 +64,7 @@ class DataBase {
      *        req_params[0] - название таблицы.
      * @return - результат уничтожения таблицы.
      */
-    reply_t drop(const req_params_t& req_params);
+    Reply drop(const req_params_t& req_params);
 
     /**
      * @brief Поместить данные в таблицу.
@@ -46,7 +74,7 @@ class DataBase {
      *        req_params[2] - значение.
      * @return - результат помещения данных в таблицу.
      */
-    reply_t insert(const req_params_t& req_params);
+    Reply insert(const req_params_t& req_params);
 
     /**
      * @brief Очистка таблицы.
@@ -54,7 +82,7 @@ class DataBase {
      *        req_params[0] - название таблицы.
      * @return - результат очистки таблицы.
      */
-    reply_t truncate(const req_params_t& req_params);
+    Reply truncate(const req_params_t& req_params);
 
     /**
      * @brief Дать пересечение двух таблиц.
@@ -63,7 +91,7 @@ class DataBase {
      *        req_params[1] - название таблицы 2.
      * @return - результат формирования пересечения таблиц.
      */
-    reply_t intersection(const req_params_t& req_params);
+    Reply intersection(const req_params_t& req_params);
 
     /**
      * @brief Дать симметрическую разность двух таблиц.
@@ -72,7 +100,7 @@ class DataBase {
      *        req_params[1] - название таблицы 2.
      * @return - результат формирования симметрической разности таблиц.
      */
-    reply_t symmetric_difference(const req_params_t& req_params);
+    Reply symmetric_difference(const req_params_t& req_params);
 
 
   private:
