@@ -6,61 +6,83 @@
 #include <vector>
 #include <map>
 
-namespace bulk {
+namespace db {
+
+/// Тип параметров запроса к БД.
+using req_params_t = std::vector<std::string>;
+
+/// Тип ответа на обращение к БД.
+using reply_t = std::pair<bool, std::string>;
 
 /**
- * @brief Класс блока команд.
+ * @brief Класс базы данных.
  */
 class DataBase {
   public:
-    using reply_t = std::pair<bool, std::string>;
-
-    DataBase() = default;
+    explicit DataBase() = default;
     ~DataBase() = default;
 
     /**
+     * @brief Создать таблицу.
+     * @param req_params - параметры запроса:
+     *        req_params[0] - название таблицы.
+     * @return - результат создания таблицы.
+     */
+    reply_t create(const req_params_t& req_params);
+
+    /**
+     * @brief Уничтожить таблицу таблицу.
+     * @param req_params - параметры запроса:
+     *        req_params[0] - название таблицы.
+     * @return - результат уничтожения таблицы.
+     */
+    reply_t drop(const req_params_t& req_params);
+
+    /**
      * @brief Поместить данные в таблицу.
-     * @param table_name - название таблицы.
-     * @param id - первичный ключ.
-     * @param value - значение.
+     * @param req_params - параметры запроса:
+     *        req_params[0] - название таблицы.
+     *        req_params[1] - первичный ключ.
+     *        req_params[2] - значение.
      * @return - результат помещения данных в таблицу.
      */
-    reply_t insert(const std::string& table_name, int id, const std::string& value);
+    reply_t insert(const req_params_t& req_params);
 
     /**
      * @brief Очистка таблицы.
-     * @param - название таблицы.
+     * @param req_params - параметры запроса:
+     *        req_params[0] - название таблицы.
      * @return - результат очистки таблицы.
      */
-    reply_t truncate(const std::string& table_name);
+    reply_t truncate(const req_params_t& req_params);
 
     /**
      * @brief Дать пересечение двух таблиц.
-     * @param table1_name - название таблицы 1.
-     * @param table2_name - название таблицы 2.
+     * @param req_params - параметры запроса:
+     *        req_params[0] - название таблицы 1.
+     *        req_params[1] - название таблицы 2.
      * @return - результат формирования пересечения таблиц.
      */
-    reply_t intersection(const std::string& table1_name, const std::string& table2_name);
+    reply_t intersection(const req_params_t& req_params);
 
     /**
      * @brief Дать симметрическую разность двух таблиц.
-     * @param table1_name - название таблицы 1.
-     * @param table2_name - название таблицы 2.
+     * @param req_params - параметры запроса:
+     *        req_params[0] - название таблицы 1.
+     *        req_params[1] - название таблицы 2.
      * @return - результат формирования симметрической разности таблиц.
      */
-    reply_t symmetric_difference(const std::string& table1_name, const std::string& table2_name);
+    reply_t symmetric_difference(const req_params_t& req_params);
 
 
   private:
     /// Тип таблицы, содержащейся в базе данных.
-    using table_t = std::map<int, std::string>;
-    /// Тип базы данных.
-    using database_t = std::map<std::string, table_t>;
+    using table_t = std::map<size_t, std::string>;
+    /// Тип хранилища данных.
+    using storage_t = std::map<std::string, table_t>;
 
-
-    database_t database_;
+    /// Хранилище данных.
+    storage_t storage_{};
 };
 
-
-
-} // namespace bulk.
+} // namespace db.

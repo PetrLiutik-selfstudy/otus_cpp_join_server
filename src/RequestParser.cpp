@@ -1,0 +1,36 @@
+﻿#include "RequestParser.h"
+
+#include <vector>
+#include <sstream>
+
+namespace db {
+
+RequestParser::RequestParser() {
+  req_func_tab_.emplace(std::make_pair("CREATE", std::bind(&DataBase::create, std::ref(db_), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("DROP", std::bind(&DataBase::drop, std::ref(db_), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("INSERT", std::bind(&DataBase::insert, std::ref(db_), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("TRUNCATE", std::bind(&DataBase::truncate, std::ref(db_), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("INTERSECTION", std::bind(&DataBase::intersection, std::ref(db_), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("SYMMETRIC_DIFFERENCE", std::bind(&DataBase::symmetric_difference, std::ref(db_), std::ref(req_params_))));
+}
+
+reply_t RequestParser::parse(const std::string& request) {
+  // Разбиение входной строки.
+  std::string req_type; // Тип запроса.
+  std::istringstream iss(request);
+  std::getline(iss, req_type, ' ');
+
+  auto it = req_func_tab_.find(req_type);
+  if(it != req_func_tab_.end()) {
+    req_params_.clear();
+    std::string param; // Параметр запроса.
+    for(; std::getline(iss, param, ' ');)
+      req_params_.emplace_back(param);
+
+    auto req_func = it->second;
+    return req_func();
+  }
+  return reply_t{false, "unknown request " + req_type};
+}
+
+} // namespace db.

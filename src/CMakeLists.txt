@@ -7,8 +7,8 @@ else ()
 endif ()
 
 find_package(Threads REQUIRED)
-find_package(Boost REQUIRED)
-find_package(Boost COMPONENTS system REQUIRED)
+#find_package(Boost REQUIRED)
+#find_package(Boost COMPONENTS system REQUIRED)
 
 file(GLOB_RECURSE SOURCES *.cpp *.h)
 
@@ -31,7 +31,7 @@ else ()
     )
 endif ()
 
-target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} ${CMAKE_THREAD_LIBS_INIT})# ${Boost_LIBRARIES})
 
 install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
