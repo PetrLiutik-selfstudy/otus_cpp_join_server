@@ -10,34 +10,34 @@ namespace db {
  * @brief Класс сервера обработки запросов к БД.
  */
 class JoinServer {
-public:
-  /**
-   * @brief Конструктор сервера обработки запросов к БД.
-   * @param port - номер порта.
-   */
-  explicit JoinServer(uint16_t port);
+  public:
+    /**
+     * @brief Конструктор сервера обработки запросов к БД.
+     * @param port - номер порта.
+     */
+    explicit JoinServer(uint16_t port);
 
-  ~JoinServer();
+    ~JoinServer();
 
-  /**
-   * @brief Запуск сервера.
-   */
-  void start();
+    /**
+     * @brief Запуск сервера.
+     */
+    void start();
 
-private:
-  /**
-   * @brief Обработка акцептирования сокета.
-   */
-  void handle_accept();
+  private:
+    /**
+     * @brief Обработка акцептирования сокета.
+     */
+    void handle_accept();
 
-  /**
-   * @brief Обработка останова сервера.
-   */
-  void handle_stop();
+    /**
+     * @brief Обработка останова сервера.
+     */
+    void handle_stop();
 
-  ba::io_service        service_{};
-  ba::ip::tcp::acceptor acceptor_;
-  ba::ip::tcp::socket   sock_;
+    ba::io_service        service_{};
+    ba::ip::tcp::acceptor acceptor_;
+    ba::ip::tcp::socket   sock_;
 };
 
 } // namespace db.

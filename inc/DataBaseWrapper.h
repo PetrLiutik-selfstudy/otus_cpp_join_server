@@ -34,8 +34,9 @@ class DataBaseWrapper {
 
     /**
      * @brief Обработать запрос к БД.
-     * @param id соединения с БД.
+     * @param conn_id - id соединения с БД.
      * @param request - запрос.
+     * @param on_reply - функция обратного вызова по результату обработки запроса.
      */
     void process(const conn_id_t& conn_id, const std::string& request,
                  std::function<void(Reply&)> on_reply);

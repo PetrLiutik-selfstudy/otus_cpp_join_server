@@ -70,7 +70,7 @@ class ThreadPool {
      * @tparam F - тип задачи.
      * @tparam Args - типы аргументов задачи.
      * @param f - задача.
-     * @tparam args - аргументы задачи.
+     * @param args - аргументы задачи.
      * @return результат выполнения задачи.
      */
     template<typename F, typename...Args>

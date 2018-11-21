@@ -14,32 +14,32 @@ using req_params_t = std::vector<std::string>;
 
 /// Класс ответа на запрос к базе данных.
 class Reply {
-public:
-  explicit Reply(bool result, const std::string& value) : result_{result}, value_{value} {
-  }
-  explicit Reply(bool result) : result_{result}, value_{} {
-  }
-  ~Reply() = default;
-  Reply(const Reply& other) = default;
-  Reply(Reply&& other) noexcept = default;
-  Reply& operator =(const Reply& other) = default;
-  Reply& operator =(Reply&& other) = default;
+  public:
+    explicit Reply(bool result, const std::string& value) : result_{result}, value_{value} {
+    }
+    explicit Reply(bool result) : result_{result}, value_{} {
+    }
+    ~Reply() = default;
+    Reply(const Reply& other) = default;
+    Reply(Reply&& other) noexcept = default;
+    Reply& operator =(const Reply& other) = default;
+    Reply& operator =(Reply&& other) = default;
 
-  void add(const std::string& value) {
-    value_ += value;
-  }
+    void add(const std::string& value) {
+      value_ += value;
+    }
 
-  /**
-   * @brief Оператор вывода в поток блока команд.
-   * @param os - поток вывода.
-   * @param bulk - блок команд для вывода в поток.
-   * @return
-   */
-  friend std::ostream& operator <<(std::ostream& os, const Reply& reply);
+    /**
+     * @brief Оператор ответа на запрос к базе данных.
+     * @param os - поток вывода.
+     * @param reply - ответ на запрос к базе данных.
+     * @return
+     */
+    friend std::ostream& operator <<(std::ostream& os, const Reply& reply);
 
-private:
-  bool result_{};
-  std::string value_{};
+  private:
+    bool result_{};
+    std::string value_{};
 };
 
 
@@ -113,6 +113,7 @@ class DataBase {
 
     /// Хранилище данных.
     storage_t storage_{};
+    /// Мютекс для разграничения обращений к хранилищу.
     std::mutex storage_guard_{};
 };
 
