@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "../inc/ver.h"
-#include "../inc/CmdProcessContext.h"
+#include "../inc/DataBase.h"
 
 #include <vector>
 #include <string>
@@ -18,224 +18,139 @@ TEST(ver_test_case, ver_patch_test) {
   EXPECT_GE(ver_patch(), 1);
 }
 
-namespace bulk {
+TEST(database_test_case, create_test) {
+  db::DataBase db;
 
-/**
- * @brief Класс для тестового вывода блока команд.
- */
-class TestWriter : public IStreamWriter {
-  public:
-    TestWriter() {
-      bulk_pool_.clear();
-      metrics_.clear();
-      time_ = std::time_t{};
-      context_id_ = uint8_t{};
-    }
+  auto reply = db.create({"C"});
+  std::ostringstream oss;
+  oss << reply;
+  EXPECT_EQ(oss.str(), std::string{"OK\n"});
 
-    ~TestWriter() override = default;
-
-    void write(uint8_t context_id, const Bulk& bulk) final {
-      bulk_pool_ = bulk.get_cmds();
-      time_ = bulk.time();
-      metrics_.push(std::this_thread::get_id(), bulk);
-      context_id_ = context_id;
-    }
-
-    static auto get_bulk() {
-      return bulk_pool_;
-    }
-
-    static auto get_time() {
-      return time_;
-    }
-
-    Metrics& get_metrics() final {
-      return metrics_;
-    }
-
-    static Metrics& get_metrics_stub() {
-      return metrics_;
-    }
-
-    static auto get_context_id() {
-      return time_;
-    }
-
-  private:
-    static std::vector<std::string> bulk_pool_;
-    static std::time_t time_;
-    static Metrics metrics_;
-    static uint8_t context_id_;
-};
-
-std::vector<std::string> TestWriter::bulk_pool_{};
-std::time_t TestWriter::time_{};
-Metrics TestWriter::metrics_{"test"};
-uint8_t TestWriter::context_id_{};
-
-} // namespace bulk.
-
-TEST(context_test_case, subscribe_test) {
-  bulk::CmdProcessContext context{1, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
-
-  std::string str = "cmd1\n";
-
-  context.process(nullptr, str.c_str(), str.size());
-
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), std::vector<std::string>{"cmd1"});
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
+  auto reply1 = db.create({"C"});
+  std::ostringstream oss1;
+  oss1 << reply1;
+  EXPECT_EQ(oss1.str(), std::string{"ERR duplicate table C\n"});
 }
 
+TEST(database_test_case, drop_test) {
+  db::DataBase db;
 
-TEST(context_test_case, partial_bulk_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
+  db.create({"C"});
 
-  std::string str = "cmd1\ncmd2\n";
+  auto reply = db.drop({"C"});
+  std::ostringstream oss;
+  oss << reply;
+  EXPECT_EQ(oss.str(), std::string{"OK\n"});
 
-  context.process(nullptr, str.c_str(), str.size());
-  context.process(nullptr, nullptr, 0, true); // Принудительное завершение блока.
-
-  std::vector<std::string> result{"cmd1", "cmd2"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
+  auto reply1 = db.drop({"C"});
+  std::ostringstream oss1;
+  oss1 << reply1;
+  EXPECT_EQ(oss1.str(), std::string{"ERR unknown table name C\n"});
 }
 
-TEST(context_test_case, full_bulk_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
+TEST(database_test_case, insert_test) {
+  db::DataBase db;
 
-  std::string str = "cmd1\ncmd2\ncmd3\n";
+  db.create({"C"});
 
-  context.process(nullptr, str.c_str(), str.size());
+  auto reply = db.insert({"C", "1", "aaa"});
+  std::ostringstream oss;
+  oss << reply;
+  EXPECT_EQ(oss.str(), std::string{"OK\n"});
 
-  std::vector<std::string> result{"cmd1", "cmd2", "cmd3"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
+  auto reply1 = db.insert({"C", "1", "bbb"});
+  std::ostringstream oss1;
+  oss1 << reply1;
+  EXPECT_EQ(oss1.str(), std::string{"ERR duplicate 1\n"});
+
+  auto reply2 = db.insert({"C", "2", "bbb"});
+  std::ostringstream oss2;
+  oss2 << reply2;
+  EXPECT_EQ(oss2.str(), std::string{"OK\n"});
+
+  auto reply3 = db.insert({"D", "3", "ccc"});
+  std::ostringstream oss3;
+  oss3 << reply3;
+  EXPECT_EQ(oss3.str(), std::string{"ERR unknown table name D\n"});
+
+  auto reply4 = db.insert({"C", "3"});
+  std::ostringstream oss4;
+  oss4 << reply4;
+  EXPECT_EQ(oss4.str(), std::string{"ERR wrong number of arguments\n"});
 }
 
-TEST(context_test_case, full_tail_bulk_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
+TEST(database_test_case, truncate_test) {
+  db::DataBase db;
 
-  std::string str = "cmd1\ncmd2\ncmd3\ncmd4\ncmd5\n";
+  db.create({"C"});
+  db.insert({"C", "1", "aaa"});
+  db.insert({"C", "2", "bbb"});
 
-  context.process(nullptr, str.c_str(), str.size());
-  context.process(nullptr, nullptr, 0, true); // Принудительное завершение блока.
+  auto reply = db.truncate({"C"});
+  std::ostringstream oss;
+  oss << reply;
+  EXPECT_EQ(oss.str(), std::string{"OK\n"});
 
-  std::vector<std::string> result{"cmd4", "cmd5"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
+  auto reply1 = db.insert({"C", "1", "aaa"});
+  std::ostringstream oss1;
+  oss1 << reply1;
+  EXPECT_EQ(oss1.str(), std::string{"OK\n"});
 }
 
-TEST(context_test_case, partial_dyn_bulk_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
+TEST(database_test_case, intersection_test) {
+  db::DataBase db;
 
-  std::string str = "cmd1\ncmd2\n{\ncmd3\ncmd4\ncmd5\ncmd6\n";
+  db.create({"C"});
+  db.insert({"C", "1", "aaa"});
+  db.insert({"C", "2", "bbb"});
 
-  context.process(nullptr, str.c_str(), str.size());
+  db.create({"D"});
+  db.insert({"D", "1", "xxx"});
+  db.insert({"D", "3", "yyy"});
 
-  std::vector<std::string> result{"cmd1", "cmd2"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
+  auto reply = db.intersection({"C", "D"});
+  std::ostringstream oss;
+  oss << reply;
+  EXPECT_EQ(oss.str(), std::string{"1,aaa,xxx\nOK\n"});
+
+  auto reply1 = db.intersection({"C", "C"});
+  std::ostringstream oss1;
+  oss1 << reply1;
+  EXPECT_EQ(oss1.str(), std::string{"1,aaa,aaa\n2,bbb,bbb\nOK\n"});
+
+  db.truncate({"D"});
+  auto reply2 = db.intersection({"C", "D"});
+  std::ostringstream oss2;
+  oss2 << reply2;
+  EXPECT_EQ(oss2.str(), std::string{"OK\n"});
 }
 
-TEST(context_test_case, full_dyn_bulk_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
+TEST(database_test_case, symmetric_difference_test) {
+  db::DataBase db;
 
-  std::string str = "cmd1\ncmd2\n{\ncmd3\ncmd4\ncmd5\ncmd6\n}\n";
+  db.create({"C"});
+  db.insert({"C", "1", "aaa"});
+  db.insert({"C", "2", "bbb"});
 
-  context.process(nullptr, str.c_str(), str.size());
+  db.create({"D"});
+  db.insert({"D", "1", "xxx"});
+  db.insert({"D", "3", "yyy"});
 
-  std::vector<std::string> result{"cmd3", "cmd4", "cmd5", "cmd6"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
-}
+  auto reply = db.symmetric_difference({"C", "D"});
+  std::ostringstream oss;
+  oss << reply;
+  EXPECT_EQ(oss.str(), std::string{"2,bbb,\n3,,yyy\nOK\n"});
 
-TEST(context_test_case, full_dyn_bulk_1_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
+  auto reply1 = db.symmetric_difference({"C", "C"});
+  std::ostringstream oss1;
+  oss1 << reply1;
+  EXPECT_EQ(oss1.str(), std::string{"OK\n"});
 
-  std::string str = "cmd1\ncmd2\n{\ncmd3\n{\ncmd4\ncmd5\n}\ncmd6\n}\n";
-
-  context.process(nullptr, str.c_str(), str.size());
-
-  std::vector<std::string> result{"cmd3", "cmd4", "cmd5", "cmd6"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
-}
-
-TEST(context_test_case, eof_bulk_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
-
-  std::string str = "cmd1\ncmd2\n{\ncmd3\ncmd4\ncmd5\ncmd6\n}\ncmd7\ncmd8\n";
-
-  context.process(nullptr, str.c_str(), str.size());
-  context.process(nullptr, nullptr, 0, true); // Принудительное завершение блока.
-
-  std::vector<std::string> result{"cmd7", "cmd8"};
-  EXPECT_EQ(bulk::TestWriter::get_bulk(), result);
-  EXPECT_NE(bulk::TestWriter::get_time(), std::time_t{});
-}
-
-TEST(context_test_case, metrics_test) {
-  bulk::CmdProcessContext context{3, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
-
-  std::string str = "cmd1\ncmd2\n{\ncmd3\ncmd4\ncmd5\ncmd6\n}\ncmd7\ncmd8\n";
-
-  context.process(nullptr, str.c_str(), str.size());
-  context.process(nullptr, nullptr, 0, true); // Принудительное завершение блока.
-
-  std::stringstream ss1;
-  ss1 << "test";
-  ss1 << " thread_id " << std::this_thread::get_id() << " - ";
-  ss1 << 3 << " bulk(s), ";
-  ss1 << 8 << " command(s) " << std::endl;
-
-  std::stringstream ss2;
-  ss2 << bulk::TestWriter::get_metrics_stub();
-
-  EXPECT_EQ(ss1.str(), ss2.str());
-}
-
-TEST(context_test_case, context_id_test) {
-  bulk::CmdProcessContext context{1, 1};
-  auto test_writer = std::make_unique<bulk::TestWriter>();
-  context.subscribe(std::move(test_writer));
-
-  std::string str = "cmd1\n";
-
-  context.process(nullptr, str.c_str(), str.size());
-
-  EXPECT_NE(bulk::TestWriter::get_context_id(), 1);
-}
-
-TEST(bulk_test_case, print_bulk_test) {
-  bulk::Bulk bulk;
-  bulk.push("cmd1");
-  bulk.push("cmd2");
-  bulk.push("cmd3");
-
-  std::stringstream ss;
-  ss << bulk;
-
-  std::string result{"bulk: cmd1, cmd2, cmd3\n"};
-
-  EXPECT_EQ(ss.str(), result);
+  db.truncate({"D"});
+  auto reply2 = db.symmetric_difference({"C", "D"});
+  std::ostringstream oss2;
+  oss2 << reply2;
+  EXPECT_EQ(oss2.str(), std::string{"1,aaa,\n2,bbb,\nOK\n"});
 }
 
 int main(int argc, char *argv[]) {
