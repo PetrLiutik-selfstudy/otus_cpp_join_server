@@ -20,10 +20,9 @@ void JoinClientSession::handle_read() {
     if (!ec) {
       std::string request(buf_.data(), len);
       DataBaseWrapper::get_instance().process(db_conn_id_, request, [this](Reply& reply) {
-          std::cout << reply;
           std::ostringstream oss;
           oss << reply;
-          write();
+          write(oss.str());
         });
       handle_read();
     } else {

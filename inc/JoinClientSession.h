@@ -36,7 +36,11 @@ private:
    */
   void handle_read();
 
-  void write();
+  /**
+   * @brief Запись данных в сокет.
+   * @param data - данные.
+   */
+  void write(const std::string& data);
 
   /// Размер приемного буфера.
   static constexpr size_t buf_len = 1024;
