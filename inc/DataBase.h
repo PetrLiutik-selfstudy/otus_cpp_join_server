@@ -1,10 +1,11 @@
 ﻿#pragma once
 
 #include <ctime>
+#include <map>
+#include <mutex>
 #include <ostream>
 #include <string>
 #include <vector>
-#include <map>
 
 namespace db {
 
@@ -109,8 +110,10 @@ class DataBase {
     /// Тип хранилища данных.
     using storage_t = std::map<std::string, table_t>;
 
+
     /// Хранилище данных.
     storage_t storage_{};
+    std::mutex storage_guard_{};
 };
 
 } // namespace db.

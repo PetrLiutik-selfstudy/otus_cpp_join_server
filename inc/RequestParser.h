@@ -16,7 +16,7 @@ class RequestParser {
     /**
      * @brief Конструтор парсера запросов к БД.
      */
-    explicit RequestParser();
+    explicit RequestParser(DataBase& db);
 
     ~RequestParser() = default;
 
@@ -28,8 +28,6 @@ class RequestParser {
     Reply parse(const std::string& request);
 
   private:
-
-    DataBase db_{};
 
     /// Таблица функций запросов к БД.
     std::map<std::string, std::function<Reply()>> req_func_tab_;

@@ -5,13 +5,13 @@
 
 namespace db {
 
-RequestParser::RequestParser() {
-  req_func_tab_.emplace(std::make_pair("CREATE", std::bind(&DataBase::create, std::ref(db_), std::ref(req_params_))));
-  req_func_tab_.emplace(std::make_pair("DROP", std::bind(&DataBase::drop, std::ref(db_), std::ref(req_params_))));
-  req_func_tab_.emplace(std::make_pair("INSERT", std::bind(&DataBase::insert, std::ref(db_), std::ref(req_params_))));
-  req_func_tab_.emplace(std::make_pair("TRUNCATE", std::bind(&DataBase::truncate, std::ref(db_), std::ref(req_params_))));
-  req_func_tab_.emplace(std::make_pair("INTERSECTION", std::bind(&DataBase::intersection, std::ref(db_), std::ref(req_params_))));
-  req_func_tab_.emplace(std::make_pair("SYMMETRIC_DIFFERENCE", std::bind(&DataBase::symmetric_difference, std::ref(db_), std::ref(req_params_))));
+RequestParser::RequestParser(DataBase& db) {
+  req_func_tab_.emplace(std::make_pair("CREATE", std::bind(&DataBase::create, std::ref(db), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("DROP", std::bind(&DataBase::drop, std::ref(db), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("INSERT", std::bind(&DataBase::insert, std::ref(db), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("TRUNCATE", std::bind(&DataBase::truncate, std::ref(db), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("INTERSECTION", std::bind(&DataBase::intersection, std::ref(db), std::ref(req_params_))));
+  req_func_tab_.emplace(std::make_pair("SYMMETRIC_DIFFERENCE", std::bind(&DataBase::symmetric_difference, std::ref(db), std::ref(req_params_))));
 }
 
 Reply RequestParser::parse(const std::string& request) {

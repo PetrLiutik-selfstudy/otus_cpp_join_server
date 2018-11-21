@@ -14,6 +14,8 @@ std::ostream& operator <<(std::ostream& os, const Reply& reply) {
 }
 
 Reply DataBase::create(const req_params_t& req_params) {
+  std::unique_lock<std::mutex> lock(storage_guard_);
+
   if(req_params.size() != 1)
     return Reply{false, "wrong number of arguments"};
 
@@ -28,6 +30,8 @@ Reply DataBase::create(const req_params_t& req_params) {
 }
 
 Reply DataBase::drop(const req_params_t& req_params) {
+  std::unique_lock<std::mutex> lock(storage_guard_);
+
   if(req_params.size() != 1)
     return Reply{false, "wrong number of arguments"};
 
@@ -42,6 +46,8 @@ Reply DataBase::drop(const req_params_t& req_params) {
 }
 
 Reply DataBase::insert(const req_params_t& req_params) {
+  std::unique_lock<std::mutex> lock(storage_guard_);
+
   if(req_params.size() != 3)
     return Reply{false, "wrong number of arguments"};
 
@@ -66,6 +72,8 @@ Reply DataBase::insert(const req_params_t& req_params) {
 }
 
 Reply DataBase::truncate(const req_params_t& req_params) {
+  std::unique_lock<std::mutex> lock(storage_guard_);
+
   if(req_params.size() != 1)
     return Reply{false, "wrong number of arguments"};
 
@@ -80,6 +88,8 @@ Reply DataBase::truncate(const req_params_t& req_params) {
 }
 
 Reply DataBase::intersection(const req_params_t& req_params) {
+  std::unique_lock<std::mutex> lock(storage_guard_);
+
   if(req_params.size() != 2)
     return Reply{false, "wrong number of arguments"};
 
@@ -115,6 +125,8 @@ Reply DataBase::intersection(const req_params_t& req_params) {
 }
 
 Reply DataBase::symmetric_difference(const req_params_t& req_params) {
+  std::unique_lock<std::mutex> lock(storage_guard_);
+
   if(req_params.size() != 2)
     return Reply{false, "wrong number of arguments"};
 

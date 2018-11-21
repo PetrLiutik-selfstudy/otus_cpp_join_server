@@ -1,7 +1,7 @@
 #include "ver.h"
 #include "JoinServer.h"
 
-#include "RequestParser.h"
+#include "DataBaseWrapper.h"
 
 #include <iostream>
 
@@ -31,19 +31,28 @@ int main(int argc, char const *argv[]) {
 //    std::cerr << e.what() << std::endl;
 //  }
 
+  auto& db_proxy = db::DataBaseWrapper::get_instance();
 
-  db::RequestParser parser;
+  auto conn_id = db_proxy.connect();
 
-  std::cout << parser.parse("CREATE A");
-  std::cout << parser.parse("CREATE B");
+  auto on_reply = [](db::Reply& reply) {
+    std::cout << reply;
+  };
 
-  std::cout << parser.parse("INSERT A 1 aaa");
-  std::cout << parser.parse("INSERT B 1 bbb");
-  std::cout << parser.parse("INSERT A 2 xxx");
-  std::cout << parser.parse("INSERT B 3 yyy");
+  db_proxy.process(conn_id, "CREATE A\n", on_reply);
 
-  std::cout << parser.parse("INTERSECTION A B");
-  std::cout << parser.parse("SYMMETRIC_DIFFERENCE A B");
+  db_proxy.process(conn_id, "CREATE A\n", on_reply);
+  db_proxy.process(conn_id, "CREATE B\n", on_reply);
+
+  db_proxy.process(conn_id, "INSERT A 1 aaa\n", on_reply);
+  db_proxy.process(conn_id, "INSERT B 1 bbb\n", on_reply);
+  db_proxy.process(conn_id, "INSERT A 2 xxx\n", on_reply);
+  db_proxy.process(conn_id, "INSERT B 3 yyy\n", on_reply);
+
+  db_proxy.process(conn_id, "INTERSECTION A B\n", on_reply);
+  db_proxy.process(conn_id, "SYMMETRIC_DIFFERENCE A B\n", on_reply);
+
+  db_proxy.disconnect(conn_id);
 
   return 0;
 }
