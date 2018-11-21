@@ -48,7 +48,7 @@ private:
  */
 class DataBase {
   public:
-    explicit DataBase() = default;
+    explicit DataBase();
     ~DataBase() = default;
 
     /**

@@ -7,7 +7,8 @@
 namespace db {
 
 ConnectionContext::ConnectionContext(DataBase& db) : parser_{db} {
-  start(2);
+  // Запуск необходимо числа потоков для обработки запросов одного соединения.
+  start(1);
 }
 
 ConnectionContext::~ConnectionContext() {

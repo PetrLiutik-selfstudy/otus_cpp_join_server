@@ -13,6 +13,12 @@ std::ostream& operator <<(std::ostream& os, const Reply& reply) {
   return os;
 }
 
+DataBase::DataBase() {
+  // По умолчанию в БД помешены две пустых таблицы "A" и "B".
+  storage_.emplace("A", table_t{});
+  storage_.emplace("B", table_t{});
+}
+
 Reply DataBase::create(const req_params_t& req_params) {
   std::unique_lock<std::mutex> lock(storage_guard_);
 
@@ -90,11 +96,19 @@ Reply DataBase::truncate(const req_params_t& req_params) {
 Reply DataBase::intersection(const req_params_t& req_params) {
   std::unique_lock<std::mutex> lock(storage_guard_);
 
-  if(req_params.size() != 2)
+  // При отсутвии параметров, считаем, что обращение к таблицам "A" и "B".
+  std::string tab1_name{};
+  std::string tab2_name{};
+  if(req_params.size() == 0) {
+    tab1_name = "A";
+    tab2_name = "B";
+  }
+  else if(req_params.size() != 2)
     return Reply{false, "wrong number of arguments"};
-
-  auto tab1_name = req_params[0];
-  auto tab2_name = req_params[1];
+  else {
+    tab1_name = req_params[0];
+    tab2_name = req_params[1];
+  }
 
   auto table1_it = storage_.find(tab1_name);
   if(table1_it == storage_.end())
@@ -127,11 +141,19 @@ Reply DataBase::intersection(const req_params_t& req_params) {
 Reply DataBase::symmetric_difference(const req_params_t& req_params) {
   std::unique_lock<std::mutex> lock(storage_guard_);
 
-  if(req_params.size() != 2)
+  // При отсутвии параметров, считаем, что обращение к таблицам "A" и "B".
+  std::string tab1_name{};
+  std::string tab2_name{};
+  if(req_params.size() == 0) {
+    tab1_name = "A";
+    tab2_name = "B";
+  }
+  else if(req_params.size() != 2)
     return Reply{false, "wrong number of arguments"};
-
-  auto tab1_name = req_params[0];
-  auto tab2_name = req_params[1];
+  else {
+    tab1_name = req_params[0];
+    tab2_name = req_params[1];
+  }
 
   auto table1_it = storage_.find(tab1_name);
   if(table1_it == storage_.end())
