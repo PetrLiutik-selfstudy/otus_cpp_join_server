@@ -1,0 +1,12 @@
+<map id="inc/DataBase.h" name="inc/DataBase.h">
+<area shape="rect" id="node2" href="$RequestParser_8h.html" title="inc/RequestParser.h" alt="" coords="211,80,351,107"/>
+<area shape="rect" id="node4" href="$DataBaseWrapper_8h.html" title="inc/DataBaseWrapper.h" alt="" coords="263,229,424,256"/>
+<area shape="rect" id="node11" href="$DataBase_8cpp.html" title="src/DataBase.cpp" alt="" coords="435,80,561,107"/>
+<area shape="rect" id="node3" href="$ConnectionContext_8h.html" title="inc/ConnectionContext.h" alt="" coords="13,155,179,181"/>
+<area shape="rect" id="node10" href="$RequestParser_8cpp.html" title="src/RequestParser.cpp" alt="" coords="203,155,359,181"/>
+<area shape="rect" id="node9" href="$ConnectionContext_8cpp.html" title="src/ConnectionContext.cpp" alt="" coords="5,229,187,256"/>
+<area shape="rect" id="node5" href="$JoinClientSession_8h.html" title="inc/JoinClientSession.h" alt="" coords="169,304,327,331"/>
+<area shape="rect" id="node8" href="$DataBaseWrapper_8cpp.html" title="src/DataBaseWrapper.cpp" alt="" coords="352,304,528,331"/>
+<area shape="rect" id="node6" href="$JoinClientSession_8cpp.html" title="src/JoinClientSession.cpp" alt="" coords="73,379,247,405"/>
+<area shape="rect" id="node7" href="$JoinServer_8cpp.html" title="src/JoinServer.cpp" alt="" coords="272,379,401,405"/>
+</map>

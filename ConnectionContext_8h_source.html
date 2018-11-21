@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.6"/>
+<title>join_server: Исходный файл inc/ConnectionContext.h</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { searchBox.OnSelectItem(0); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td style="padding-left: 0.5em;">
+   <div id="projectname">join_server
+   </div>
+   <div id="projectbrief">Otus homework 13</div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.6 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'Поиск');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>Титульная&#160;страница</span></a></li>
+      <li><a href="namespaces.html"><span>Пространства&#160;имен</span></a></li>
+      <li><a href="annotated.html"><span>Классы</span></a></li>
+      <li class="current"><a href="files.html"><span>Файлы</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Поиск" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="files.html"><span>Файлы</span></a></li>
+      <li><a href="globals.html"><span>Список&#160;членов&#160;всех&#160;файлов</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>Указатель</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Классы</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Пространства имен</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Файлы</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Функции</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Определения типов</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(6)"><span class="SelectionMark">&#160;</span>Друзья</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(7)"><span class="SelectionMark">&#160;</span>Макросы</a></div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="dir_bfccd401955b95cf8c75461437045ac0.html">inc</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">ConnectionContext.h</div>  </div>
+</div><!--header-->
+<div class="contents">
+<a href="ConnectionContext_8h.html">См. документацию.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="preprocessor"></span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="RequestParser_8h.html">RequestParser.h</a>&quot;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;</div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="ThreadPool_8h.html">ThreadPool.h</a>&quot;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;</div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160;<span class="preprocessor">#include &lt;functional&gt;</span></div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &lt;list&gt;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;</div>
+<div class="line"><a name="l00011"></a><span class="lineno"><a class="line" href="namespacedb.html">   11</a></span>&#160;<span class="keyword">namespace </span>db {</div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;</div>
+<div class="line"><a name="l00013"></a><span class="lineno"><a class="line" href="namespacedb.html#a3ef3c6684c97a9a7a0e1cee91e8df076">   13</a></span>&#160;<span class="keyword">using</span> <a class="code" href="namespacedb.html#a3ef3c6684c97a9a7a0e1cee91e8df076">conn_id_t</a> = <span class="keywordtype">void</span>*;</div>
+<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160;</div>
+<div class="line"><a name="l00018"></a><span class="lineno"><a class="line" href="classdb_1_1ConnectionContext.html">   18</a></span>&#160;<span class="keyword">class </span><a class="code" href="classdb_1_1ConnectionContext.html">ConnectionContext</a> : <span class="keyword">public</span> <a class="code" href="classdb_1_1ThreadPool.html">ThreadPool</a> {</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;  <span class="keyword">public</span>:</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;    <span class="keyword">explicit</span> <a class="code" href="classdb_1_1ConnectionContext.html#a60a4ef48f94ef16e69f828ae492ac0ba">ConnectionContext</a>(<a class="code" href="classdb_1_1DataBase.html">DataBase</a>&amp; db);</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    <a class="code" href="classdb_1_1ConnectionContext.html#aaa68f321dfca74e7a544fd5b9939c67c">~ConnectionContext</a>();</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;    <span class="keywordtype">void</span> <a class="code" href="classdb_1_1ConnectionContext.html#a025fb93847045fe9531fd6a11fb931b9">process</a>(<span class="keyword">const</span> std::string&amp; request, std::function&lt;<span class="keywordtype">void</span>(<a class="code" href="classdb_1_1Reply.html">Reply</a>&amp;)&gt; on_reply);</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;  <span class="keyword">private</span>:</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;    <a class="code" href="classdb_1_1RequestParser.html">RequestParser</a> parser_;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;    std::string data_{};</div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    <a class="code" href="namespacedb.html#a3ef3c6684c97a9a7a0e1cee91e8df076">conn_id_t</a> conn_id_{};</div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;};</div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;</div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;} <span class="comment">// namespace db.</span></div>
+<div class="ttc" id="namespacedb_html_a3ef3c6684c97a9a7a0e1cee91e8df076"><div class="ttname"><a href="namespacedb.html#a3ef3c6684c97a9a7a0e1cee91e8df076">db::conn_id_t</a></div><div class="ttdeci">void * conn_id_t</div><div class="ttdef"><b>Definition:</b> ConnectionContext.h:13</div></div>
+<div class="ttc" id="ThreadPool_8h_html"><div class="ttname"><a href="ThreadPool_8h.html">ThreadPool.h</a></div></div>
+<div class="ttc" id="classdb_1_1Reply_html"><div class="ttname"><a href="classdb_1_1Reply.html">db::Reply</a></div><div class="ttdoc">Класс ответа на запрос к базе данных. </div><div class="ttdef"><b>Definition:</b> DataBase.h:16</div></div>
+<div class="ttc" id="classdb_1_1ConnectionContext_html_a025fb93847045fe9531fd6a11fb931b9"><div class="ttname"><a href="classdb_1_1ConnectionContext.html#a025fb93847045fe9531fd6a11fb931b9">db::ConnectionContext::process</a></div><div class="ttdeci">void process(const std::string &amp;request, std::function&lt; void(Reply &amp;)&gt; on_reply)</div><div class="ttdoc">Обработка входной команды. </div><div class="ttdef"><b>Definition:</b> ConnectionContext.cpp:18</div></div>
+<div class="ttc" id="classdb_1_1RequestParser_html"><div class="ttname"><a href="classdb_1_1RequestParser.html">db::RequestParser</a></div><div class="ttdoc">Класс парсера запросов к БД. </div><div class="ttdef"><b>Definition:</b> RequestParser.h:14</div></div>
+<div class="ttc" id="RequestParser_8h_html"><div class="ttname"><a href="RequestParser_8h.html">RequestParser.h</a></div></div>
+<div class="ttc" id="classdb_1_1ConnectionContext_html_a60a4ef48f94ef16e69f828ae492ac0ba"><div class="ttname"><a href="classdb_1_1ConnectionContext.html#a60a4ef48f94ef16e69f828ae492ac0ba">db::ConnectionContext::ConnectionContext</a></div><div class="ttdeci">ConnectionContext(DataBase &amp;db)</div><div class="ttdoc">Конструктор. </div><div class="ttdef"><b>Definition:</b> ConnectionContext.cpp:9</div></div>
+<div class="ttc" id="classdb_1_1ConnectionContext_html"><div class="ttname"><a href="classdb_1_1ConnectionContext.html">db::ConnectionContext</a></div><div class="ttdoc">Класс котнекста обработчика команд. </div><div class="ttdef"><b>Definition:</b> ConnectionContext.h:18</div></div>
+<div class="ttc" id="classdb_1_1ConnectionContext_html_aaa68f321dfca74e7a544fd5b9939c67c"><div class="ttname"><a href="classdb_1_1ConnectionContext.html#aaa68f321dfca74e7a544fd5b9939c67c">db::ConnectionContext::~ConnectionContext</a></div><div class="ttdeci">~ConnectionContext()</div><div class="ttdef"><b>Definition:</b> ConnectionContext.cpp:14</div></div>
+<div class="ttc" id="classdb_1_1ThreadPool_html"><div class="ttname"><a href="classdb_1_1ThreadPool.html">db::ThreadPool</a></div><div class="ttdoc">Шаблон пула потоков. </div><div class="ttdef"><b>Definition:</b> ThreadPool.h:17</div></div>
+<div class="ttc" id="classdb_1_1DataBase_html"><div class="ttname"><a href="classdb_1_1DataBase.html">db::DataBase</a></div><div class="ttdoc">Класс базы данных. </div><div class="ttdef"><b>Definition:</b> DataBase.h:49</div></div>
+</div><!-- fragment --></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.6
+</small></address>
+</body>
+</html>
