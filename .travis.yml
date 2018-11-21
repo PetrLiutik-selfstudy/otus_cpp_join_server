@@ -10,6 +10,8 @@ addons:
       - gcc-7
       - g++-7
       - libboost-all-dev
+      - doxygen
+      - graphviz
 
 install:
   - export CC=gcc-7
@@ -19,3 +21,6 @@ install:
 script:
   - cmake .
   - cmake --build .
+  - cmake --build . --target test
+  - cmake --build . --target package
+  - doxygen Doxyfile
