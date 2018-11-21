@@ -1,6 +1,7 @@
 ﻿#include "DataBaseWrapper.h"
 
 #include <algorithm>
+#include <iostream>
 
 namespace db {
 
@@ -28,6 +29,7 @@ void DataBaseWrapper::disconnect(const conn_id_t& conn_id) {
 
 void DataBaseWrapper::process(const conn_id_t& conn_id, const std::string& request,
                               std::function<void(Reply&)> on_reply) {
+  std::cout << request;
   std::unique_lock<std::mutex> lock(contexts_mutex_);
   auto it = conns_.find(conn_id);
   if(it != conns_.end())

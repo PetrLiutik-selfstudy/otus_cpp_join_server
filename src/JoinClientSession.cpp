@@ -1,30 +1,42 @@
-//#include "JoinClientSession.h"
+#include "JoinClientSession.h"
 
-//#include <iostream>
+#include <iostream>
+#include <sstream>
+#include <vector>
 
-//namespace bulk {
+namespace db {
 
-//JoinClientSession::JoinClientSession(ba::ip::tcp::socket sock) :
-//  bulk_size_{bulk_size}, sock_{std::move(sock)} {
-//}
+JoinClientSession::JoinClientSession(ba::ip::tcp::socket sock) : sock_{std::move(sock)} {
+}
 
-//void JoinClientSession::start() {
-//  handle_ = bulk::CmdProcessor::get_instance().create_context(bulk_size_);
-//  self_   = shared_from_this();
-//  handle_read();
-//}
+void JoinClientSession::start() {
+  db_conn_id_ = DataBaseWrapper::get_instance().connect();
+  self_   = shared_from_this();
+  handle_read();
+}
 
-//void JoinClientSession::handle_read() {
-//  sock_.async_read_some(ba::buffer(buf_), [this](const boost::system::error_code& ec, std::size_t len) {
-//    if (!ec) {
-//      bulk::CmdProcessor::get_instance().process(handle_, buf_.data(), len);
-//      handle_read();
-//    } else {
-//      bulk::CmdProcessor::get_instance().destroy_context(handle_);
-//      sock_.close();
-//      self_.reset();
-//    }
-//  });
-//}
+void JoinClientSession::handle_read() {
+  sock_.async_read_some(ba::buffer(buf_), [this](const boost::system::error_code& ec, std::size_t len) {
+    if (!ec) {
+      std::string request(buf_.data(), len);
+      DataBaseWrapper::get_instance().process(db_conn_id_, request, [this](Reply& reply) {
+          std::cout << reply;
+          std::ostringstream oss;
+          oss << reply;
+          write();
+        });
+      handle_read();
+    } else {
+      DataBaseWrapper::get_instance().disconnect(db_conn_id_);
+      sock_.close();
+      self_.reset();
+    }
+  });
+}
 
-//} // namespace bulk.
+void JoinClientSession::write(const std::string& data) {
+  std::vector<boost::asio::const_buffer> buf{boost::asio::buffer(data)};
+  sock_.async_write_some(buf, [](const boost::system::error_code&, std::size_t) {});
+}
+
+} // namespace db.

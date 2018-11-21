@@ -1,48 +1,50 @@
 #pragma once
 
-//#include "CmdProcessor.h"
+#include "DataBaseWrapper.h"
 
-//#include <array>
-//#include <memory>
+#include <array>
+#include <memory>
 
-//#include <boost/asio.hpp>
+#include <boost/asio.hpp>
 
-//namespace ba = boost::asio;
+namespace ba = boost::asio;
 
-//namespace bulk {
+namespace db {
 
-///**
-// * @brief Класс сессии клиента.
-// */
-//class JoinClientSession : public std::enable_shared_from_this<JoinClientSession> {
-//public:
-//  /**
-//   * @brief Конструктор клиентской сессии.
-//   * @param sock - сокет, через который установлено соединение с клиентом.
-//   */
-//  explicit JoinClientSession(ba::ip::tcp::socket sock);
+/**
+ * @brief Класс сессии клиента.
+ */
+class JoinClientSession : public std::enable_shared_from_this<JoinClientSession> {
+public:
+  /**
+   * @brief Конструктор клиентской сессии.
+   * @param sock - сокет, через который установлено соединение с клиентом.
+   */
+  explicit JoinClientSession(ba::ip::tcp::socket sock);
 
-//  ~JoinClientSession() = default;
+  ~JoinClientSession() = default;
 
-//  /**
-// * @brief Запустить клиентскую сессию.
-// */
-//  void start();
+  /**
+ * @brief Запустить клиентскую сессию.
+ */
+  void start();
 
-//private:
+private:
 
-//  /**
-//   * @brief Обработка асинхронного чтения данных из сокета.
-//   */
-//  void handle_read();
+  /**
+   * @brief Обработка асинхронного чтения данных из сокета.
+   */
+  void handle_read();
 
-//  /// Размер приемного буфера.
-//  static constexpr size_t buf_len = 1024;
+  void write();
 
-//  ba::ip::tcp::socket                sock_;
-//  handle_t                           handle_{};
-//  std::array<char, buf_len>          buf_;
-//  std::shared_ptr<JoinClientSession> self_;
-//};
+  /// Размер приемного буфера.
+  static constexpr size_t buf_len = 1024;
 
-//} // namespace bulk.
+  ba::ip::tcp::socket                sock_;
+  conn_id_t                          db_conn_id_{};
+  std::array<char, buf_len>          buf_;
+  std::shared_ptr<JoinClientSession> self_;
+};
+
+} // namespace db.

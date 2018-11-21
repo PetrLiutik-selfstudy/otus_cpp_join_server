@@ -2,13 +2,12 @@
 
 #include <algorithm>
 #include <istream>
-#include <iostream>
 #include <thread>
 
 namespace db {
 
 ConnectionContext::ConnectionContext(DataBase& db) : parser_{db} {
-  start(1);
+  start(2);
 }
 
 ConnectionContext::~ConnectionContext() {
@@ -20,10 +19,11 @@ void ConnectionContext::process(const std::string& request, std::function<void(R
   for(;;) {
     auto end_line = data_.find('\n');
     if(end_line != std::string::npos) {
-      std::string request = data_.substr(0, end_line);
+      std::string str = data_.substr(0, end_line);
 
-      auto future_reply = add_job([this, &request, &on_reply]() {
-        auto reply = parser_.parse(request);
+      // Создание задачи для пула потоков для обработки запроса к БД.
+      add_job([this, str, on_reply]() {
+        auto reply = parser_.parse(str);
         on_reply(reply);
       });
 
